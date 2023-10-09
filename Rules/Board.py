@@ -1,3 +1,4 @@
+from collections import deque
 from enum import Enum
 import Rules
 
@@ -13,6 +14,7 @@ class Board:
         self.size = size
         self._board = [[None for _ in range(size)] for _ in range(size)]
         self.turn = 0
+        self.turn_deque = deque()
 
     @property
     def board(self):
@@ -39,6 +41,8 @@ class Board:
         elif stone is Stone.B:
             if self.is_valid(row, col, stone):
                 self._board[row][col] = stone
+                self.turn_deque.appendleft((row, col))
+
                 self.turn += 1
             else:
                 return False, None
@@ -52,3 +56,19 @@ class Board:
             return True, str(stone)
         elif self.is_full():
             return True,  'Draw'
+
+        return True, None
+
+    def undo(self):
+        for _ in range(2):
+            row, col = self.turn_deque.popleft()
+            self._board[row][col] = None
+        self.turn -= 2
+
+    def get_moves(self):
+        result = []
+        for i in range(self.turn):
+            row, col = self.turn_deque[i]
+            result.append(f'{str(Stone((i%2)+1))}{i + 1}. ({row}, {col})')
+
+        return result
