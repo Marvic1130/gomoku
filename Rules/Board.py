@@ -11,28 +11,28 @@ class Stone(Enum):
 
 class Board:
     def __init__(self, size=15):
-        self.size = size
-        self._board = [[None for _ in range(size)] for _ in range(size)]
+        self.size = size # 바둑판의 크기
+        self._board = [[None for _ in range(size)] for _ in range(size)] # 바둑판 초기화
         self.turn = 0
-        self.turn_deque = deque()
+        self.turn_deque = deque() # 바둑판에 놓인 돌의 위치를 기록
 
     @property
     def board(self):
         return self._board
 
-    def get(self, row, col):
+    def get(self, row, col): # 바둑판의 특정 위치의 돌을 반환
         return self._board[row][col]
 
-    def is_valid(self, row, col, stone):
+    def is_valid(self, row, col, stone): # 바둑판의 특정 위치에 돌을 놓을 수 있는지 검사
         return Rules.check_violation(self._board, stone, row, col)
 
-    def is_empty(self, row, col):
+    def is_empty(self, row, col): # 바둑판의 특정 위치가 비어있는지 검사
         return self._board[row][col] is None
 
-    def is_full(self):
+    def is_full(self): # 바둑판이 가득 찼는지 검사
         return self.turn == self.size ** 2
 
-    def is_win(self, row, col, stone):
+    def is_win(self, row, col, stone): # 바둑판의 특정 위치에 돌을 놓았을 때 승리했는지 검사
         return Rules.check_win(self._board, row, col, stone)
 
     def set(self, row, col, stone):
