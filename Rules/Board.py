@@ -24,7 +24,10 @@ class Board:
         return self._board[row][col]
 
     def is_valid(self, row, col, stone): # 바둑판의 특정 위치에 돌을 놓을 수 있는지 검사
-        return Rules.check_violation(self._board, stone, row, col)
+        if stone == Stone.B:
+            return Rules.check_violation(self._board, stone, row, col)
+        else:
+            return True
 
     def is_empty(self, row, col): # 바둑판의 특정 위치가 비어있는지 검사
         return self._board[row][col] is None

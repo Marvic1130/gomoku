@@ -1,0 +1,2 @@
+# UCT 파라미터
+EXPLORATION_WEIGHT = 1.0
