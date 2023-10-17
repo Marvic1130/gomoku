@@ -16,6 +16,13 @@ class Board:
         self.turn = 0
         self.turn_deque = deque() # 바둑판에 놓인 돌의 위치를 기록
 
+    def copy(self):
+        new_board = Board(self.size)
+        new_board._board = [row[:] for row in self._board]
+        new_board.turn = self.turn
+        new_board.turn_deque = deque(self.turn_deque)
+        return new_board
+
     @property
     def board(self):
         return self._board
