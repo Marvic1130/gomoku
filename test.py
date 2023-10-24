@@ -4,7 +4,7 @@ from Train.MCTS import mcts_search
 
 def play_game():
     board = Board(size=15)  # 오목 게임 보드 생성
-    num_iterations = 100  # MCTS 탐색 반복 횟수
+    num_iterations = 200  # MCTS 탐색 반복 횟수
 
     while not board.is_full():
         # MCTS를 사용하여 다음 수 예측

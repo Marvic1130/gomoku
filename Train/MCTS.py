@@ -47,6 +47,11 @@ def select_best_child(node):
             if value > max_value:
                 max_value = value
                 best_child = child
+
+    # 만약 모든 자식노드의 방문횟수가 0이거나, 아예 자식노드가 없는 경우, None을 반환하지 않고 임의로 첫번째 자식노드를 반환하도록 함.
+    if best_child is None and node.children:
+        return node.children[0]
+
     return best_child
 
 
@@ -57,63 +62,83 @@ def simulate_parallel(node):
 # MCTS 탐색 메인 함수
 def mcts_search(board, num_iterations):
     root = MCTSNode(board)
-    num_cores = os.cpu_count()  # 시스템의 CPU 코어 수를 얻음
-    pool = Pool(processes=num_cores)
+    if not root.board.is_full():
+        num_cores = os.cpu_count()  # 시스템의 CPU 코어 수를 얻음
+        pool = Pool(processes=num_cores)
 
-    for _ in range(num_iterations):
-        node = root
-        while node.children:
-            node = select_child(node)
+        for _ in range(num_iterations):
+            node = root
+            while node.children:
+                node = select_child(node)
 
-        if not node.board.is_full():
-            child_board = node.board.copy()
+            if not node.board.is_full():
+                child_board = node.board.copy()
 
-            if child_board.turn == 0:  # 첫 번째 턴: 항상 중심 (7, 7)에 놓음
-                move = (7, 7)
+                if child_board.turn == 0:  # 첫 번째 턴: 항상 중심 (7, 7)에 놓음
+                    move = (7, 7)
+                    child_board.set(move[0], move[1], node.stone)
 
-            elif child_board.turn == 1:  # 두 번째 턴: 주변 8개 위치 중 하나 무작위 선택
-                first_turn_moves = child_board.turn_deque[0]
-                second_turn_moves = []
-                for r in range(-1, 2):
-                    for c in range(-1, 2):
-                        if not (r == 0 and c == 0):
-                            second_turn_moves.append((first_turn_moves[0] + r, first_turn_moves[1] + c))
+                elif child_board.turn == 1:  # 두 번째 턴: 주변 8개 위치 중 하나 무작위 선택
+                    first_turn_moves = child_board.turn_deque[0]
+                    second_turn_moves = []
+                    for r in range(-1, 2):
+                        for c in range(-1, 2):
+                            if not (r == 0 and c == 0):
+                                second_turn_moves.append((first_turn_moves[0] + r,
+                                                          first_turn_moves[1] + c))
 
-                move = random.choice(second_turn_moves)
+                    move = random.choice(second_turn_moves)
+                    child_board.set(move[0], move[1], node.stone)
 
-            elif child_board.turn == 2:  # 세 번째 턴: 주변23개 위치 중 하나 무작위 선택
-                first_turn_moves = child_board.turn_deque[1]
-                second_turn_moves = child_board.turn_deque[0]
+                elif child_board.turn == 2:  # 세 번째 턴: 주변23개 위치 중 하나 무작위 선택
+                    first_turn_moves = child_board.turn_deque[1]
+                    second_turn_moves = child_board.turn_deque[0]
 
-                relative_position = (second_turn_moves[0] - first_turn_moves[0],
-                                     second_turn_moves[1] - first_turn_moves[1])
-                third_tun_positions = []
+                    relative_position = (second_turn_moves[0] - first_turn_moves[0],
+                                         second_turn_moves[1] - first_turn_moves[1])
+                    third_tun_positions = []
 
-                for r in range(-2, 3):
-                    for c in range(-2, 3):
+                    for r in range(-2, 3):
+                        for c in range(-2, 3):
 
-                        if (r, c) not in [(0, 0), relative_position,
-                                          (-2, -2), (-2, +2), (+2, -2), (+2, +2)]:
-                            third_tun_positions.append((first_turn_moves[0] + r,
-                                                        first_turn_moves[1] + c))
+                            if (r, c) not in [(0, 0), relative_position,
+                                              (-2, -2), (-2, +2), (+2, -2), (+2, +2)]:
+                                third_tun_positions.append((first_turn_moves[0] + r,
+                                                            first_turn_moves[1] + c))
 
-                move = random.choice(third_tun_positions)
+                    move = random.choice(third_tun_positions)
+                    child_board.set(move[0], move[1], node.stone)
+
+                else:
+                    legal_move = [(r, c) for r in range(board.size) for c
+                                  in range(board.size) if child_board.is_valid(r, c, node.stone)]
+                    move = random.choice(legal_move) if legal_move else (-1, -1)
+                    child_board.set(move[0], move[1], node.stone)
+
+                child_node = MCTSNode(child_board, parent=node)
+                node.children.append(child_node)
 
             else:
-                legal_move = [(r, c) for r in range(board.size) for c
-                              in range(board.size) if child_board.is_valid(r, c, node.stone)]
-                move = random.choice(legal_move) if legal_move else (-1, -1)
+                break
 
-            child_board.set(move[0], move[1], node.stone)
-            child_node = MCTSNode(child_board, parent=node)
+        result_node_pairs = pool.map(simulate_parallel,
+                                     [child for child in node.children])
 
-        else:
-            break
+        results, nodes = zip(*result_node_pairs)
+        result = sum(results) / len(results)
+
+        backpropagate(node, result)
+
+        # multiprocessing pool 종료
+        pool.close()
+
+    else:  # 게임판이 이미 꽉 찬 경우, 현재 상태 그대로 반환함.
+        return board
 
     best_child = select_best_child(root)
 
-    # multiprocessing pool 종료
-    pool.close()
+    if best_child is None:
+        return board
 
     return best_child.board
 
@@ -127,13 +152,15 @@ def simulate(node):
                        board.is_valid(r, c, current_player)]
         move = random.choice(legal_moves) if legal_moves else (-1, -1)
         board.set(move[0], move[1], current_player)
-        current_player = Stone.W if current_player == Stone.B else Stone.B
 
         if check_win(board.board, move[0], move[1], current_player):
-            result = 1
+            result = 1 if current_player == Stone.B else -1  # Black wins: 1 / White wins: -1
             return result
 
-    result = 0
+        # Switch player after making a move.
+        current_player = Stone.W if current_player == Stone.B else Stone.B
+
+    result = 0  # Drawn game.
     return result
 
 
