@@ -1,6 +1,6 @@
 from collections import deque
 from enum import Enum
-import Rules
+
 
 class Stone(Enum):
     B = 1
@@ -9,12 +9,13 @@ class Stone(Enum):
     def __str__(self):
         return 'Black' if self is Stone.B else 'White'
 
+
 class Board:
     def __init__(self, size=15):
-        self.size = size # 바둑판의 크기
-        self._board = [[None for _ in range(size)] for _ in range(size)] # 바둑판 초기화
+        self.size = size  # 바둑판의 크기
+        self._board = [[None for _ in range(size)] for _ in range(size)]  # 바둑판 초기화
         self.turn = 0
-        self.turn_deque = deque() # 바둑판에 놓인 돌의 위치를 기록
+        self.turn_deque = deque()  # 바둑판에 놓인 돌의 위치를 기록
 
     def copy(self):
         new_board = Board(self.size)
@@ -27,39 +28,43 @@ class Board:
     def board(self):
         return self._board
 
-    def get(self, row, col): # 바둑판의 특정 위치의 돌을 반환
+    def get(self, row, col):  # 바둑판의 특정 위치의 돌을 반환
         return self._board[row][col]
 
-    def is_valid(self, row, col, stone): # 바둑판의 특정 위치에 돌을 놓을 수 있는지 검사
-        if stone == Stone.B:
+    def is_valid(self, row, col, stone):  # 바둑판의 특정 위치에 돌을 놓을 수 있는지 검사
+        import Rules.Rules as Rules
+
+        if not (0 <= row < self.size and 0 <= col < self.size):  # 바둑판의 범위를 벗어나는지 확인
+            return False
+
+        elif self._board[row][col] is not None:  # 해당 위치가 비어있는지 확인
+            return False
+
+        elif stone == Stone.B:
             return Rules.check_violation(self._board, stone, row, col)
         else:
             return True
 
-    def is_empty(self, row, col): # 바둑판의 특정 위치가 비어있는지 검사
+    def is_empty(self, row, col):  # 바둑판의 특정 위치가 비어있는지 검사
         return self._board[row][col] is None
 
-    def is_full(self): # 바둑판이 가득 찼는지 검사
+    def is_full(self):  # 바둑판이 가득 찼는지 검사
         return self.turn == self.size ** 2
 
-    def is_win(self, row, col, stone): # 바둑판의 특정 위치에 돌을 놓았을 때 승리했는지 검사
+    def is_win(self, row, col, stone):  # 바둑판의 특정 위치에 돌을 놓았을 때 승리했는지 검사
+        import Rules.Rules as Rules
         return Rules.check_win(self._board, row, col, stone)
 
-    def set(self, row, col, stone):
+    def set(self, row: int, col: int, stone: Stone):
         if self._board[row][col] is not None:
             return False, None
         elif stone is Stone.B:
-            if self.is_valid(row, col, stone):
-                self._board[row][col] = stone
-                self.turn_deque.appendleft((row, col))
-
-                self.turn += 1
-            else:
+            if not self.is_valid(row, col, stone):
                 return False, None
 
-        elif stone is Stone.W:
-            self._board[row][col] = stone
-            self.turn += 1
+        self._board[row][col] = stone
+        self.turn_deque.appendleft((row, col))
+        self.turn += 1
 
         win = self.is_win(row, col, stone)
         if win:
@@ -82,3 +87,16 @@ class Board:
             result.append(f'{str(Stone((i%2)+1))}{i + 1}. ({row}, {col})')
 
         return result
+
+    def show(self):
+        print('\n=============================================\n')
+        for row in self._board:
+            for stone in row:
+                if stone is None:
+                    print(' + ', end='')
+                elif stone is Stone.B:
+                    print(' ● ', end='')
+                elif stone is Stone.W:
+                    print(' ○ ', end='')
+            print()
+        print('\n=============================================\n')
