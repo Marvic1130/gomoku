@@ -122,7 +122,7 @@ def mcts_search(board, num_iterations):
                 break
 
         result_node_pairs = pool.map(simulate_parallel,
-                                     [child for child in node.children])
+                                     [child for child in node.children] * param.SIMULATIONS_PER_EVALUATION)
 
         results, nodes = zip(*result_node_pairs)
         result = sum(results) / len(results)
