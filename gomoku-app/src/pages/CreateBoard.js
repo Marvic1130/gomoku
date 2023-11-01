@@ -1,22 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const CommunityContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const PostGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 세 개의 열 */
+  grid-gap: 20px; /* 열과 행 사이의 간격 */
 `;
 
-const PostList = styled.div`
-  width: 80%;
-  margin: 2% auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-`;
-
-const PostItem = styled.div`
+const PostItemStyle = styled.div`
   padding: 10px;
   margin: 10px 0;
   background-color: white;
@@ -24,22 +15,75 @@ const PostItem = styled.div`
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 `;
 
-const PostTitle = styled.h2`
+const PostTitleStyle = styled.h2`
   font-size: 1.5rem;
 `;
 
-const PostContent = styled.p`
+const PostContentStyle = styled.p`
   font-size: 1rem;
 `;
 
-const CreatePostForm = styled.div`
+const CommunityContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+
+const CreatePostFormStyle = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 80%;
   margin: 2% auto;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  input {
+    font-size: 15px;
+    height: 50px;
+    padding: 5px;
+  }
+  textarea {
+    font-size: 15px;
+    height: 500px;
+    resize: vertical;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  button {
+    background:black;
+    color:white;
+    width: 80px;
+    height: 50px;
+    border:grey;
+    margin:3px;
+  }
+  button:hover{
+    background:lightgrey;
+    color:black;
+  }
 `;
+
+const ButtonWrapper = styled.div`
+ 
+  display: flex;
+  justify-content: right;
+
+`
+const PostList = ({ posts }) => {
+  return (
+    <PostGrid>
+      {posts.map((post) => (
+        <PostItemStyle key={post.id}>
+          <PostTitleStyle>{post.title}</PostTitleStyle>
+          <PostContentStyle>{post.content}</PostContentStyle>
+        </PostItemStyle>
+      ))}
+    </PostGrid>
+  );
+};
+
 
 const CreateBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -58,33 +102,32 @@ const CreateBoard = () => {
 
   return (
     <CommunityContainer>
-      <CreatePostForm>
-        <h2>Create a new post</h2>
-        <form onSubmit={handlePostSubmit}>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={newPost.title}
-            onChange={handleInputChange}
-          />
-          <textarea
-            name="content"
-            placeholder="Write your post here"
-            value={newPost.content}
-            onChange={handleInputChange}
-          />
-          <button type="submit">Post</button>
-        </form>
-      </CreatePostForm>
-      <PostList>
-        {posts.map((post, index) => (
-          <PostItem key={index}>
-            <PostTitle>{post.title}</PostTitle>
-            <PostContent>{post.content}</PostContent>
-          </PostItem>
-        ))}
-      </PostList>
+      <CreatePostFormStyle>
+        <h2>게시글 작성</h2>
+        <input
+          type="text"
+          name="title"
+          placeholder="제목을 작성해주세요"
+          value={newPost.title}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <textarea
+          name="content"
+          placeholder="내용을 작성해주세요"
+          value={newPost.content}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <ButtonWrapper>
+          <button type="submit" onChange={handlePostSubmit}>등록</button>
+          <button type="submit" >취소</button>       
+
+          
+
+        </ButtonWrapper>
+      </CreatePostFormStyle>
+      <PostList posts={posts} />
     </CommunityContainer>
   );
 };

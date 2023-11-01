@@ -13,9 +13,9 @@ const PostItem = styled.div`
   border-radius: 10px;
 `;
 
-const PostList = () => {
+const PostList = ({posts}) => {
   // 글 목록 임시 데이터
-  const posts = [
+  const Temposts = [
     { id: 1, title: '글 1', content: '내용 1' },
     { id: 2, title: '글 2', content: '내용 2' },
     { id: 3, title: '글 3', content: '내용 3' },
@@ -27,7 +27,7 @@ const PostList = () => {
 
   return (
     <PostGrid>
-      {posts.map((post) => (
+      {Temposts.map((post) => (
         <PostItem key={post.id}>
           <h2>{post.title}</h2>
           <p>{post.content}</p>

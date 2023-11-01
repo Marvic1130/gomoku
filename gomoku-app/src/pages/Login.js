@@ -25,12 +25,22 @@ const LoginButton = styled.button`
   cursor: pointer;
 `;
 
+const RegistLink = styled.a`
+  display: block;
+  color: black;
+  margin-top: 10px;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    console.log('Username:', username);
+    console.log('Email:', email);
     console.log('Password:', password);
   };
 
@@ -38,20 +48,19 @@ const Login = () => {
     <LoginContainer>
       <h2>Login</h2>
       <LoginInput
-        type="text"
+        type="email"
         placeholder="이메일을 입력하세요"
-        value={username}
-        onChange={(e) => 
-          setUsername(e.target.value)}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <LoginInput
         type="password"
         placeholder="비밀번호를 입력하세요"
         value={password}
-        onChange={(e) =>
-          setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <LoginButton onClick={handleLogin}>Login</LoginButton>
+      <RegistLink href="/regist">회원이 아니십니까? 회원가입하기</RegistLink>
     </LoginContainer>
   );
 };

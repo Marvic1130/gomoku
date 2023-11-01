@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'; // import Link if you're using react-router-dom
 
 const CommunityContainer = styled.div`
   display: flex;
@@ -36,25 +37,33 @@ const SearchInput = styled.input`
   padding: 10px;
   margin: 10px;
   width: 80%;
-  
-  align-items: flex-end;
+`;
+
+const CreateBoardButton = styled(Link)`
+  position: fixed;
+  bottom: 50px;
+  right: 100px;
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
 `;
 
 const Community = () => {
-    //예시 데이터
-    //추후DB에서 가져오기
   const [posts, setPosts] = useState([
     { id: 1, title: '글1', content: '내용1' },
     { id: 2, title: '글2', content: '내용2' },
     { id: 3, title: '글3', content: '내용3' },
+    { id: 4, title: '글4', content: '내용4' },
+
   ]);
 
   return (
     <CommunityContainer>
-     {/* <h1>커뮤니티</h1> */}
-
       <PostList>
-      <SearchInput
+        <SearchInput
           type="text"
           placeholder="게시글을 검색해 주세요."
         />
@@ -65,6 +74,7 @@ const Community = () => {
           </PostItem>
         ))}
       </PostList>
+      <CreateBoardButton to="/createboard">게시글 작성</CreateBoardButton>
     </CommunityContainer>
   );
 };

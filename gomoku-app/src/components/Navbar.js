@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 
 const NavbarContainer = styled.nav`
-  background-color: #333;
+  background-color: #222;
   color: white;
   padding: 10px 0;
   display: flex;
@@ -64,7 +64,10 @@ const Navbar = () => {
           <NavLink href="/community">커뮤니티</NavLink>
         </NavItem>
         <NavItem>
-          <Link to="/login"> {/* 로그인 페이지로 이동 */}
+          <NavLink href="/mypage">마이페이지</NavLink>
+        </NavItem>
+        <NavItem>
+          <Link to="/login">
             <LoginButton>Login</LoginButton>
           </Link>
         </NavItem>
