@@ -47,12 +47,13 @@ const NavbarContainer = styled.nav`
   padding: 10px 0;
   display: flex;
   justify-content: space-between;
-  padding: 25px;
+  padding: 15px;
   align-items: center;
+
 `;
 
 const Logo = styled.img`
-  width: 200px;
+  width: 150px;
   margin-left: 10px;
 `;
 

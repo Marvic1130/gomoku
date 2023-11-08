@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import data from '../data/data.json'
 
 
-
 const BoardDetail = () => {
 
   const post = data.post[0];
@@ -44,21 +43,15 @@ const BoardDetail = () => {
 
 export default BoardDetail;
 
-
-const DetailContainer = styled.div`
-  text-align: center;
-  margin: 5% auto;
-  width: 60%;
+const DetailContainer = styled.p`
+  margin: 2% auto;
+  width: 80%;
   padding: 2%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-`;
+  border-radius: 30px;`
 
-const Title = styled.h1`
+const Title = styled.h2`
   margin-bottom: 10px;
   color: #333;
-  font-size: 2rem;
   text-align: left;
 `;
 
@@ -70,8 +63,8 @@ const SubInfo = styled.div`
 
 const Content = styled.p`
   text-align: left;
-  margin-bottom: 40px;
-  font-size: 1.2rem;
+  margin: 5% 20% 10% 0;
+  font-size: 1rem;
   line-height: 1.8;
 `;
 

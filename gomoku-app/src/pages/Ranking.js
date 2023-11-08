@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import  { useState } from 'react';
 import data from '../data/data.json';
 
+
 const sortData = (data) => {
     const sortedData = data.sort((a, b) => {
       if (a.rank !== b.rank) {
@@ -17,10 +18,7 @@ const sortData = (data) => {
 const Ranking = () => {
   
   const rankingData = data.ranking;
-  
   const sortedData = sortData(rankingData);
-
-
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (event) => {
@@ -29,7 +27,6 @@ const Ranking = () => {
 
   return (
     <RankingContainer>
-        
       <ListContainer>
       <SearchInput
           type="text"
@@ -38,10 +35,11 @@ const Ranking = () => {
           onChange={handleSearch}
         />
         <TitleContainer>
-          <Title style={{ minWidth: "100px" }}>Ranking</Title>
-          <Title style={{ marginLeft: "30px", minWidth: "150px" }}>User</Title>
-          <Title style={{ marginLeft: "600px", minWidth: "100px" }}>Tier</Title>
-          <Title style={{ marginLeft: "20px" }}>Win Rate</Title>
+          {/* 수정 반드시 필요..... */}
+          <Title style={{ minWidth: "10%" }}>Ranking</Title>
+          <Title style={{ minWidth: "65%" }}>User</Title>
+          <Title style={{ minWidth: "10%" }}>Tier</Title>
+          <Title>Win Rate</Title>
         </TitleContainer>
         {sortedData.map((item, index) => (
           <div key={index}>
@@ -83,40 +81,50 @@ const ListItem = styled.div`
   border-radius: 10px;
   margin: 0 2%;
   padding: 20px;
-`;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  `
+
 
 const Rank = styled.div`
   font-weight: bold;
+  flex: 1;
   min-width: 50px;
 `;
 
 const User = styled.div`
-  margin-left: 50px;
+  flex: 2;
   min-width: 150px;
 `;
 
 const Tier = styled.div`
-  margin-left: 600px;
+  flex: 2;
   min-width: 100px;
 `;
 
 const WinRate = styled.div`
-  margin-left: 20px;
+  flex: 1;
 `;
-
 const Divider = styled.div`
   border-top: 1px solid #f1f1f1;
 `;
 
 const Title = styled.div`
-  font-weight: bold;rank
-  min-width: 100px;
+   font-weight: bold;
+   flex: 1;
 `;
 
 const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 20px;
+  @media (max-width: 900px) {
+    display:fixed;
+    }
+  
 `;
 const SearchInput = styled.input`
   padding: 10px;

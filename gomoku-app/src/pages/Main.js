@@ -32,11 +32,11 @@ const MainContainer = styled.div`
 `;
 
 const LeftContainer = styled.div`
-  flex: 2; /* 커뮤니티 페이지를 2/3로 설정 */
+  flex: 2; 
 `;
 
 const RightContainer = styled.div`
-  flex: 1; /* 개인정보와 랭킹을 1/3로 설정 */
+  flex: 1;
   display: flex;
   flex-direction: column;
   margin-left: 20px;

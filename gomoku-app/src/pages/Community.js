@@ -16,6 +16,7 @@ const Community = () => {
         {post.map((post) => (
           <PostItem key={post.id}>
             <PostTitle>{post.title}</PostTitle>
+            <Postinfo>{post.author} | {post.date}</Postinfo>
             <PostContent>{post.content}</PostContent>
           </PostItem>
         ))}
@@ -26,8 +27,6 @@ const Community = () => {
 };
 
 export default Community;
-
-
 
 const CommunityContainer = styled.div`
   display: flex;
@@ -58,6 +57,11 @@ const PostTitle = styled.h2`
 
 const PostContent = styled.p`
   font-size: 1rem;
+`;
+
+const Postinfo = styled.p`
+  font-size: 1rem;
+  color: grey;
 `;
 
 const SearchInput = styled.input`
