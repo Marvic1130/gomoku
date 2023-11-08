@@ -1,14 +1,39 @@
 import React from 'react';
 import styled from 'styled-components';
+import data from '../data/data.json';
 
-// 더미 JSON 데이터
-const userData = {
-  name: '사용자 이름',
-  email: 'user@example.com',
-  phoneNumber: '010-1234-5678',
-  tier: '골드',
-  winRate: '70%'
-};
+
+class MyPage extends React.Component {
+
+  handleEditInfo = () => {
+    // 정보 수정 기능 구현 하기
+  };
+  
+
+  render() {
+    const userData  = data.user[0];
+    return (
+      <MyPageContainer>
+        <h2>마이페이지</h2>
+        <UserInfoWrapper>
+            <UserImage src="https://via.placeholder.com/150" alt="프로필 이미지" />
+          <UserInfoList>
+            <UserInfoItem>이름: {userData.name}</UserInfoItem>
+            <UserInfoItem>이메일: {userData.email}</UserInfoItem>
+            <UserInfoItem>전화번호: {userData.phoneNumber}</UserInfoItem>
+            <UserInfoItem>티어: {userData.tier}</UserInfoItem>
+            <UserInfoItem>승률: {userData.winRate}</UserInfoItem>
+          </UserInfoList>
+        </UserInfoWrapper>
+        <EditButton onClick={this.handleEditInfo}>정보 수정</EditButton>
+      </MyPageContainer>
+    );
+  }
+}
+
+export default MyPage;
+
+
 
 const UserInfoWrapper = styled.div`
   display: flex;
@@ -58,30 +83,3 @@ const EditButton = styled.button`
     background-color: #808080;
   }
 `;
-
-class MyPage extends React.Component {
-  handleEditInfo = () => {
-    // 정보 수정 기능 구현 하기
-  };
-
-  render() {
-    return (
-      <MyPageContainer>
-        <h2>마이페이지</h2>
-        <UserInfoWrapper>
-            <UserImage src="https://via.placeholder.com/150" alt="프로필 이미지" />
-          <UserInfoList>
-            <UserInfoItem>이름: {userData.name}</UserInfoItem>
-            <UserInfoItem>이메일: {userData.email}</UserInfoItem>
-            <UserInfoItem>전화번호: {userData.phoneNumber}</UserInfoItem>
-            <UserInfoItem>티어: {userData.tier}</UserInfoItem>
-            <UserInfoItem>승률: {userData.winRate}</UserInfoItem>
-          </UserInfoList>
-        </UserInfoWrapper>
-        <EditButton onClick={this.handleEditInfo}>정보 수정</EditButton>
-      </MyPageContainer>
-    );
-  }
-}
-
-export default MyPage;

@@ -1,6 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const Banner = () => {
+  return (
+    <BannerContainer>
+      <h1> GO!MOKU </h1>
+      <SearchInput type="text" placeholder="검색 내용을 입력해 주세요." />
+    </BannerContainer>
+  );
+};
+
+export default Banner;
+
+
 const BannerContainer = styled.div`
   background-color: #dedede;
   color: white;
@@ -16,13 +28,3 @@ const SearchInput = styled.input`
   margin: 10px;
 `;
 
-const Banner = () => {
-  return (
-    <BannerContainer>
-      <h1> GO!MOKU </h1>
-      <SearchInput type="text" placeholder="검색 내용을 입력해 주세요." />
-    </BannerContainer>
-  );
-};
-
-export default Banner;

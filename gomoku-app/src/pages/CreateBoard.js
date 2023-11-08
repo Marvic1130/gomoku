@@ -1,10 +1,73 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
+const PostList = ({ posts }) => {
+  return (
+    <PostGrid>
+      {posts.map((post) => (
+        <PostItemStyle key={post.id}>
+          <PostTitleStyle>{post.title}</PostTitleStyle>
+          <PostContentStyle>{post.content}</PostContentStyle>
+        </PostItemStyle>
+      ))}
+    </PostGrid>
+  );
+};
+
+
+const CreateBoard = () => {
+  const [posts, setPosts] = useState([]);
+  const [newPost, setNewPost] = useState({ title: '', content: '' });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewPost((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePostSubmit = (e) => {
+    e.preventDefault();
+    setPosts((prevPosts) => [...prevPosts, newPost]);
+    setNewPost({ title: '', content: '' });
+  };
+
+  return (
+    <CommunityContainer>
+      <CreatePostFormStyle>
+        <h2>게시글 작성</h2>
+        <input
+          type="text"
+          name="title"
+          placeholder="제목을 작성해주세요"
+          value={newPost.title}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <textarea
+          name="content"
+          placeholder="내용을 작성해주세요"
+          value={newPost.content}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <ButtonWrapper>
+          <button type="submit" onChange={handlePostSubmit}>등록</button>
+          <a href="/community"><button >취소</button></a>
+
+        </ButtonWrapper>
+      </CreatePostFormStyle>
+      <PostList posts={posts} />
+    </CommunityContainer>
+  );
+};
+
+export default CreateBoard;
+
 
 const PostGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 세 개의 열 */
-  grid-gap: 20px; /* 열과 행 사이의 간격 */
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
 `;
 
 const PostItemStyle = styled.div`
@@ -71,65 +134,3 @@ const ButtonWrapper = styled.div`
   justify-content: right;
 
 `
-const PostList = ({ posts }) => {
-  return (
-    <PostGrid>
-      {posts.map((post) => (
-        <PostItemStyle key={post.id}>
-          <PostTitleStyle>{post.title}</PostTitleStyle>
-          <PostContentStyle>{post.content}</PostContentStyle>
-        </PostItemStyle>
-      ))}
-    </PostGrid>
-  );
-};
-
-
-const CreateBoard = () => {
-  const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({ title: '', content: '' });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewPost((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePostSubmit = (e) => {
-    e.preventDefault();
-    setPosts((prevPosts) => [...prevPosts, newPost]);
-    setNewPost({ title: '', content: '' });
-  };
-
-  return (
-    <CommunityContainer>
-      <CreatePostFormStyle>
-        <h2>게시글 작성</h2>
-        <input
-          type="text"
-          name="title"
-          placeholder="제목을 작성해주세요"
-          value={newPost.title}
-          onChange={handleInputChange}
-          style={{ marginBottom: '10px' }}
-        />
-        <textarea
-          name="content"
-          placeholder="내용을 작성해주세요"
-          value={newPost.content}
-          onChange={handleInputChange}
-          style={{ marginBottom: '10px' }}
-        />
-        <ButtonWrapper>
-          <button type="submit" onChange={handlePostSubmit}>등록</button>
-          <button type="submit" >취소</button>       
-
-          
-
-        </ButtonWrapper>
-      </CreatePostFormStyle>
-      <PostList posts={posts} />
-    </CommunityContainer>
-  );
-};
-
-export default CreateBoard;

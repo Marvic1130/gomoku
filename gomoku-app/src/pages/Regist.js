@@ -1,45 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const RegistContainer = styled.div`
-  text-align: center;
-  margin: 5% auto;
-  width: 300px;
-  padding: 5%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: white;
-`;
-
-const RegistInputBox = styled.div`
-  width: 100%;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const RegistInputLabel = styled.label`
-  text-align: left;
-  margin-bottom: 5px;
-`;
-
-const RegistInputField = styled.input`
-  width: calc(100% - 22px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const RegistButton = styled.button`
-  background-color: black;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  width: 100px;
-  height: 50px;
-  cursor: pointer;
-`;
-
 const Regist = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -102,3 +63,43 @@ const Regist = () => {
 };
 
 export default Regist;
+
+
+const RegistContainer = styled.div`
+  text-align: center;
+  margin: 5% auto;
+  width: 300px;
+  padding: 5%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+`;
+
+const RegistInputBox = styled.div`
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const RegistInputLabel = styled.label`
+  text-align: left;
+  margin-bottom: 5px;
+`;
+
+const RegistInputField = styled.input`
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const RegistButton = styled.button`
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+`;

@@ -1,8 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // 'Switch' 대신 'Routes' 사용
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-
 import Main from './pages/Main';
 import Login from './pages/Login';
 import Regist from './pages/Regist';
@@ -14,10 +13,6 @@ import BoardDetail from './pages/BoardDetail';
 
 import styled from 'styled-components';
 
-//컴포넌트로 바꾸기!!
-const PageContainer = styled.div`
-  background-color: #f2f2f2;
-`;
 
 
 const App = () => {
@@ -33,14 +28,21 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/createboard" element={<CreateBoard />} />
             <Route path="/regist" element={<Regist />} />
-
             <Route path="/boardetail" element={<BoardDetail />} />
             <Route path="/mypage" element={<MyPage />} />
           </Routes>
-        <Footer />
+          <Footer/>
       </PageContainer>
     </Router>
   );
 };
 
 export default App;
+
+
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;

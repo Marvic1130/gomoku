@@ -1,5 +1,49 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import data from '../data/data.json'
+
+
+
+const BoardDetail = () => {
+
+  const post = data.post[0];
+
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+
+  const handleAddComment = () => {
+    if (newComment) {
+      setComments([...comments, newComment]);
+      setNewComment('');
+    }
+  };
+
+  return (
+    <DetailContainer>
+      <Title>{post.title}</Title>
+      <SubInfo>
+        작성일: {post.date} | 작성자: {post.author}
+      </SubInfo>
+      <Content>{post.content}</Content>
+      <CommentSection>
+        <h3>댓글</h3>
+        {comments.map((comment, index) => (
+          <p key={index}>{comment}</p>
+        ))}
+        <CommentInput
+          type="text"
+          placeholder="댓글을 입력하세요"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+        />
+        <CommentButton onClick={handleAddComment}>댓글 달기</CommentButton>
+      </CommentSection>
+    </DetailContainer>
+  );
+};
+
+export default BoardDetail;
+
 
 const DetailContainer = styled.div`
   text-align: center;
@@ -52,49 +96,3 @@ const CommentButton = styled.button`
   border-radius: 5px;
   font-size: 1rem;
 `;
-
-const BoardDetail = () => {
-  // 가정: 게시글의 정보가 JSON 형식으로 제공됨
-  const post = {
-    title: '게시글 제목',
-    date: '2023년 10월 31일',
-    author: '사용자1',
-    content:
-      '다음 내용은 임시 텍스트입니다. 그림자는 가장 찾아 작고 피고 그것은 지혜는 따뜻한 칼이다. 이것을 쓸쓸하랴? 심장의 얼마나 목숨을 봄바람이다..맺어. 것이 지혜는 그들의 풍부하게 그리하였는가? 생의 위하여 것이 가치를 얼마나 못할 살았으며. ',
-  };
-
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
-
-  const handleAddComment = () => {
-    if (newComment) {
-      setComments([...comments, newComment]);
-      setNewComment('');
-    }
-  };
-
-  return (
-    <DetailContainer>
-      <Title>{post.title}</Title>
-      <SubInfo>
-        작성일: {post.date} | 작성자: {post.author}
-      </SubInfo>
-      <Content>{post.content}</Content>
-      <CommentSection>
-        <h3>댓글</h3>
-        {comments.map((comment, index) => (
-          <p key={index}>{comment}</p>
-        ))}
-        <CommentInput
-          type="text"
-          placeholder="댓글을 입력하세요"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <CommentButton onClick={handleAddComment}>댓글 달기</CommentButton>
-      </CommentSection>
-    </DetailContainer>
-  );
-};
-
-export default BoardDetail;

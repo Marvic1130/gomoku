@@ -1,7 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 상태
+
+  const handleLogin = () => {
+    setIsLoggedIn(true); // 로그인 처리
+  };
+
+  return (
+    <NavbarContainer>
+      <Link to="/main">
+        <Logo src="/go_logo.png" alt="Logo" />
+      </Link>
+      <NavList>
+        <NavItem>
+          <NavLink href="/main">홈</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="/ranking">랭킹</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="/community">커뮤니티</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="/mypage">마이페이지</NavLink>
+        </NavItem>
+        {!isLoggedIn && (
+          <NavItem>
+            <Link to="/login">
+              <LoginButton onClick={handleLogin}>Login</LoginButton>
+            </Link>
+          </NavItem>
+        )}
+      </NavList>
+    </NavbarContainer>
+  );
+};
+
+export default Navbar;
 
 const NavbarContainer = styled.nav`
   background-color: #222;
@@ -46,34 +84,3 @@ const LoginButton = styled.button`
   padding: 5px 10px;
   cursor: pointer;
 `;
-
-const Navbar = () => {
-  return (
-    <NavbarContainer>
-      <Link to="/main">
-        <Logo src="/go_logo.png" alt="Logo" />
-      </Link>
-      <NavList>
-        <NavItem>
-          <NavLink href="/main">홈</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/ranking">랭킹</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/community">커뮤니티</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/mypage">마이페이지</NavLink>
-        </NavItem>
-        <NavItem>
-          <Link to="/login">
-            <LoginButton>Login</LoginButton>
-          </Link>
-        </NavItem>
-      </NavList>
-    </NavbarContainer>
-  );
-};
-
-export default Navbar;

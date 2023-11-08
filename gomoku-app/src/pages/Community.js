@@ -1,6 +1,33 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'; // import Link if you're using react-router-dom
+import { Link } from 'react-router-dom'; 
+import data from '../data/data.json';
+
+const Community = () => {
+  const post = data.post;
+
+  return (
+    <CommunityContainer>
+      <PostList>
+        <SearchInput
+          type="text"
+          placeholder="게시글을 검색해 주세요."
+        />
+        {post.map((post) => (
+          <PostItem key={post.id}>
+            <PostTitle>{post.title}</PostTitle>
+            <PostContent>{post.content}</PostContent>
+          </PostItem>
+        ))}
+      </PostList>
+      <CreateBoardButton to="/createboard">게시글 작성</CreateBoardButton>
+    </CommunityContainer>
+  );
+};
+
+export default Community;
+
+
 
 const CommunityContainer = styled.div`
   display: flex;
@@ -50,33 +77,3 @@ const CreateBoardButton = styled(Link)`
   border-radius: 10px;
   text-decoration: none;
 `;
-
-const Community = () => {
-  const [posts, setPosts] = useState([
-    { id: 1, title: '글1', content: '내용1' },
-    { id: 2, title: '글2', content: '내용2' },
-    { id: 3, title: '글3', content: '내용3' },
-    { id: 4, title: '글4', content: '내용4' },
-
-  ]);
-
-  return (
-    <CommunityContainer>
-      <PostList>
-        <SearchInput
-          type="text"
-          placeholder="게시글을 검색해 주세요."
-        />
-        {posts.map((post) => (
-          <PostItem key={post.id}>
-            <PostTitle>{post.title}</PostTitle>
-            <PostContent>{post.content}</PostContent>
-          </PostItem>
-        ))}
-      </PostList>
-      <CreateBoardButton to="/createboard">게시글 작성</CreateBoardButton>
-    </CommunityContainer>
-  );
-};
-
-export default Community;
