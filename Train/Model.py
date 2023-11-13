@@ -77,6 +77,45 @@ class DQN(nn.Module):
         x = self.relu2(self.dense2(x))
         return self.output_layer(x)
 
+class CNN(nn.Module):
+    def __init__(self, in_channels, num_classes):
+        super(CNN, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, 32, kernel_size=5, stride=1, padding=2)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.relu1 = nn.ReLU()
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.relu2 = nn.ReLU()
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=5, stride=1, padding=2)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.relu3 = nn.ReLU()
+        self.conv4 = nn.Conv2d(128, 64, kernel_size=5, stride=1, padding=2)
+        self.bn4 = nn.BatchNorm2d(64)
+        self.relu4 = nn.ReLU()
+        self.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(128, num_classes)
+
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu1(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu2(out)
+
+        out = self.conv3(out)
+        out = self.bn3(out)
+        out = self.relu3(out)
+
+        # out = self.conv4(out)
+        # out = self.bn4(out)
+        # out = self.relu4(out)
+
+        out = self.global_pool(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc(out)
+        return out
 
 # BiLSTM 모델 빌드
 input_size = 15 * 15

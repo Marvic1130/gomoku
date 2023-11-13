@@ -1,14 +1,15 @@
 from time import sleep
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from sklearn.metrics import f1_score
 from torch.utils.data import Dataset, DataLoader
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
-from Model import ResNet
+from Model import ResNet, CNN
 import pandas as pd
 import numpy as np
+from Utils.tools import calculate_accuracy
 
 # 데이터 로드 및 전처리
 csv_file_path = '../Data/gameData.csv'  # 데이터 파일 경로
@@ -35,7 +36,7 @@ for index, row in df.iterrows():
         # 움직임 데이터 변환
         label = move_to_label(move, board_size)
 
-        # 게임 결과를 확인하고 데이터를 이에 따라 수집합니다.
+        # 게임 결과를 확인하고 데이터를 이에 따라 수집.
         if result == 0 and i % 2 == 0:
             game_x.append(list(board))  # 현재 보드 상태를 추가
             game_y.append(label)  # 변환된 움직임을 추가
@@ -54,7 +55,7 @@ for index, row in df.iterrows():
             else:
                 board[row, col] = -1
         else:
-            raise ValueError("이 위치에 이미 돌이 있습니다.")
+            raise ValueError("Stone already exists in this place.")
 
     # 게임 데이터를 주 x 및 y 목록에 추가합니다.
     x.extend(game_x)
@@ -87,54 +88,73 @@ val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 # ResNet 모델 빌드
 in_channels = 1  # 입력 이미지 채널 수
 num_classes = 15 * 15  # 클래스 수 (착수 위치 수)
-resnet_model = ResNet(in_channels, num_classes)
-
+# resnet_model = ResNet(in_channels, num_classes)
+cnn_model = CNN(in_channels, num_classes)
 # 모델 요약
-print(resnet_model)
+# print(resnet_model)
+print(cnn_model)
 
 # 모델을 선택한 장치로 이동 (CPU 또는 GPU)
 device = torch.device("cuda" if torch.cuda.is_available() else 'mps:0' if torch.backends.mps.is_available() else 'cpu')
-resnet_model.to(device)
+# resnet_model.to(device)
+cnn_model.to(device)
 
 # 손실 함수 및 옵티마이저 설정
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(resnet_model.parameters(), lr=0.001)
+# optimizer = optim.Adam(resnet_model.parameters(), lr=0.001)
+optimizer = optim.Adam(cnn_model.parameters(), lr=0.001)
 
 # 학습 루프
-num_epochs = 10
+num_epochs = 100
 
 for epoch in range(num_epochs):
-    resnet_model.train()
+    # resnet_model.train()
+    cnn_model.train()
     total_loss = 0.0
+    correct = 0
+    total = 0
 
     for inputs, labels in tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs}"):
         inputs, labels = inputs.to(device), labels.to(device)
 
         optimizer.zero_grad()
 
-        outputs = resnet_model(inputs)
+        # outputs = resnet_model(inputs)
+        outputs = cnn_model(inputs)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
-
-        total_loss += loss.item()
-
-    avg_loss = total_loss / len(train_loader)
-    print(f"Epoch [{epoch + 1}/{num_epochs}] - Loss: {avg_loss:.4f}")
-    sleep(1)
-
-# 평가
-resnet_model.eval()
-correct = 0
-total = 0
-
-with torch.no_grad():
-    for inputs, labels in val_loader:
-        inputs, labels = inputs.to(device), labels.to(device)
-        outputs = resnet_model(inputs)
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
-accuracy = 100 * correct / total
-print(f"Validation Accuracy: {accuracy:.2f}%")
+        total_loss += loss.item()
+
+    avg_loss = total_loss / len(train_loader)
+    accuracy = 100 * correct / total
+    print(f"Epoch [{epoch + 1}/{num_epochs}] - Loss: {avg_loss:.4f}, Accuracy: {accuracy:.2f}%")
+    # 에포크 종료 후 정확도 계산 및 출력
+    sleep(1)
+
+# 최종 테스트 데이터에 대한 F1 스코어 계산
+test_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+test_accuracy = calculate_accuracy(cnn_model, test_loader, device)
+
+# 모델의 예측 수행
+predictions = []
+true_labels = []
+
+cnn_model.eval()
+with torch.no_grad():
+    for inputs, labels in test_loader:
+        inputs, labels = inputs.to(device), labels.to(device)
+        outputs = cnn_model(inputs)
+        _, predicted = torch.max(outputs.data, 1)
+        predictions.extend(predicted.cpu().numpy())
+        true_labels.extend(labels.cpu().numpy())
+
+# F1 스코어 계산
+test_f1 = f1_score(true_labels, predictions, average='weighted')
+
+print(f"Test Accuracy: {test_accuracy:.2f}%")
+print(f"Test F1 Score: {test_f1:.4f}")
