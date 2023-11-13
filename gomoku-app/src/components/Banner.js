@@ -16,7 +16,7 @@ export default Banner;
 const BannerContainer = styled.div`
   background-color: #fbfbfb;
   color: #333;
-  padding: 70px;
+  padding: 130px;
   text-align: center;
 `;
 
@@ -24,9 +24,8 @@ const SearchInput = styled.input`
   width: 500px;
   height: 30px;
   padding: 10px;
-  border: none;
+  border: 2px solid #dddddd;
   color:black;
-  background-color: lightgrey;
   border-radius: 5px;
   margin: 10px;
 `;

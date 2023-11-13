@@ -16,7 +16,7 @@ const PostList = () => {
 
   const totalPages = Math.ceil(posts.length / pageSize);
 
-  // 페이지네이션 범위 계산
+  // 페이지네이션 범위
   const paginationRange = () => {
     const maxPagesToShow = 5;
     const middlePage = Math.floor(maxPagesToShow / 2);
@@ -76,7 +76,6 @@ const PostList = () => {
 export default PostList;
 
 
-
 const PostGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr; 
@@ -88,7 +87,7 @@ const PostItem = styled.div`
   background-color: white;
   padding: 15px; 
   border-radius: 10px;
-  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.03);  
+  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.05);  
   margin-bottom: 30px; 
 `;
 

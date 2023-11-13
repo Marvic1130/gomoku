@@ -32,7 +32,8 @@ const MainContainer = styled.div`
 `;
 
 const LeftContainer = styled.div`
-  flex: 2; 
+  flex: 2;
+  margin-right: 20px;
 `;
 
 const RightContainer = styled.div`

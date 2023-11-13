@@ -34,7 +34,7 @@ const UserContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.03);  
+  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.05);  
 `;
 
 const UserInfo = styled.div`

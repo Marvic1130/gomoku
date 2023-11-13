@@ -6,7 +6,7 @@ import data from '../data/data.json';
 class MyPage extends React.Component {
 
   handleEditInfo = () => {
-    // 정보 수정 기능 구현 하기
+    // 정보 수정 기능 구현 하기ㅎ..
   };
   
 
@@ -53,10 +53,9 @@ const MyPageContainer = styled.div`
   width: 80%;
   max-width: 800px;
   padding: 5%;
-  border: 1px solid #ccc;
   border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.05);  
 `;
 
 const UserImage = styled.img`
