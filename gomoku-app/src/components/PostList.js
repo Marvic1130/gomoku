@@ -14,6 +14,27 @@ const PostList = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const totalPages = Math.ceil(posts.length / pageSize);
+
+  // 페이지네이션 범위 계산
+  const paginationRange = () => {
+    const maxPagesToShow = 5;
+    const middlePage = Math.floor(maxPagesToShow / 2);
+
+    if (currentPage <= middlePage) {
+      return Array.from({ length: maxPagesToShow }, (_, index) => index + 1);
+    }
+
+    if (currentPage + middlePage >= totalPages) {
+      return Array.from(
+        { length: maxPagesToShow },
+        (_, index) => totalPages - maxPagesToShow + index + 1
+      );
+    }
+
+    return Array.from({ length: maxPagesToShow }, (_, index) => currentPage - middlePage + index);
+  };
+
   return (
     <div>
       <PostGrid>
@@ -26,15 +47,27 @@ const PostList = () => {
       </PostGrid>
 
       <Pagination>
-        {Array.from({ length: Math.ceil(posts.length / pageSize) }, (_, index) => (
+        {currentPage > 1 && (
+          <PageNumber onClick={() => paginate(currentPage - 1)}>
+            &lt;
+          </PageNumber>
+        )}
+
+        {paginationRange().map((pageNumber) => (
           <PageNumber
-            key={index}
-            onClick={() => paginate(index + 1)}
-            className={currentPage === index + 1 ? "active" : ""}
+            key={pageNumber}
+            onClick={() => paginate(pageNumber)}
+            className={currentPage === pageNumber ? 'active' : ''}
           >
-            {index + 1}
+            {pageNumber}
           </PageNumber>
         ))}
+
+        {currentPage < totalPages && (
+          <PageNumber onClick={() => paginate(currentPage + 1)}>
+            &gt;
+          </PageNumber>
+        )}
       </Pagination>
     </div>
   );
@@ -42,17 +75,20 @@ const PostList = () => {
 
 export default PostList;
 
+
+
 const PostGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr; 
-  grid-gap: 20px; 
+  grid-gap: 20px;
+  
 `;
 
 const PostItem = styled.div`
   background-color: white;
   padding: 15px; 
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.03);  
   margin-bottom: 30px; 
 `;
 

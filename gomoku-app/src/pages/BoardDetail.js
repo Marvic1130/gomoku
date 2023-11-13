@@ -58,7 +58,6 @@ const Title = styled.h2`
 const SubInfo = styled.div`
   text-align: left;
   color: #888;
-  margin-bottom: 20px;
 `;
 
 const Content = styled.p`

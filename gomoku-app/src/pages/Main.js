@@ -43,12 +43,11 @@ const RightContainer = styled.div`
 `;
 
 const PageContainer = styled.div`
-  background-color: #f2f2f2;
+  background-color: #fbfbfb;
 `;
 
 const ContentContainer = styled.div`
-  border-radius: 10px;
-  background-color: white;
+  
   padding: 20px;
   margin: 20px;
 `;

@@ -31,10 +31,10 @@ const UserSection = () => {
 export default UserSection;
 
 const UserContainer = styled.div`
-  background-color: #f9f9f9;
+  background-color: white;
   padding: 20px;
   border-radius: 10px;
-  margin-top: 20px;
+  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.03);  
 `;
 
 const UserInfo = styled.div`
