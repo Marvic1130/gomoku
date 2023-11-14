@@ -37,7 +37,7 @@ const Ranking = () => {
         <TitleContainer>
           {/* 수정 반드시 필요..... */}
           <Title style={{ minWidth: "10%" }}>Ranking</Title>
-          <Title style={{ minWidth: "65%" }}>User</Title>
+          <Title style={{ minWidth: "50%" }}>User</Title>
           <Title style={{ minWidth: "10%" }}>Tier</Title>
           <Title>Win Rate</Title>
         </TitleContainer>
@@ -96,17 +96,19 @@ const Rank = styled.div`
 `;
 
 const User = styled.div`
-  flex: 2;
-  min-width: 150px;
+  flex: 3.3;
+  min-width: 100px;
 `;
 
 const Tier = styled.div`
-  flex: 2;
+  flex: 1;
   min-width: 100px;
 `;
 
 const WinRate = styled.div`
   flex: 1;
+  min-width: 100px;
+
 `;
 const Divider = styled.div`
   border-top: 1px solid #f1f1f1;
@@ -114,7 +116,7 @@ const Divider = styled.div`
 
 const Title = styled.div`
    font-weight: bold;
-   flex: 1;
+     flex-grow: 1;
 `;
 
 const TitleContainer = styled.div`

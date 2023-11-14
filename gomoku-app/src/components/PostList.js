@@ -36,7 +36,7 @@ const PostList = () => {
   };
 
   return (
-    <div>
+    <Container>
       <PostGrid>
         {currentPosts.map((post) => (
           <PostItem key={post.id}>
@@ -46,54 +46,72 @@ const PostList = () => {
         ))}
       </PostGrid>
 
-      <Pagination>
-        {currentPage > 1 && (
-          <PageNumber onClick={() => paginate(currentPage - 1)}>
-            &lt;
-          </PageNumber>
-        )}
+      <PaginationContainer>
+        <Pagination>
+          {currentPage > 1 && (
+            <PageNumber onClick={() => paginate(currentPage - 1)}>
+              &lt;
+            </PageNumber>
+          )}
 
-        {paginationRange().map((pageNumber) => (
-          <PageNumber
-            key={pageNumber}
-            onClick={() => paginate(pageNumber)}
-            className={currentPage === pageNumber ? 'active' : ''}
-          >
-            {pageNumber}
-          </PageNumber>
-        ))}
+          {paginationRange().map((pageNumber) => (
+            <PageNumber
+              key={pageNumber}
+              onClick={() => paginate(pageNumber)}
+              className={currentPage === pageNumber ? 'active' : ''}
+            >
+              {pageNumber}
+            </PageNumber>
+          ))}
 
-        {currentPage < totalPages && (
-          <PageNumber onClick={() => paginate(currentPage + 1)}>
-            &gt;
-          </PageNumber>
-        )}
-      </Pagination>
-    </div>
+          {currentPage < totalPages && (
+            <PageNumber onClick={() => paginate(currentPage + 1)}>
+              &gt;
+            </PageNumber>
+          )}
+        </Pagination>
+      </PaginationContainer>
+    </Container>
   );
 };
 
 export default PostList;
 
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.05);  
+  overflow: hidden;
+  background:white;
+`;
+
 const PostGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr; 
-  grid-gap: 20px;
-  
+  grid-gap: 10px;
+  border-bottom: 2px solid #ccc;
+  overflow: hidden;
 `;
 
 const PostItem = styled.div`
   background-color: white;
   padding: 15px; 
-  border-radius: 10px;
-  box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.05);  
-  margin-bottom: 30px; 
+  border-bottom: 1px solid #eee;
+
+`;
+
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px;
 `;
 
 const Pagination = styled.div`
   display: flex;
-  justify-content: center;
 `;
 
 const PageNumber = styled.div`
