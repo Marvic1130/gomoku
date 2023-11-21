@@ -153,7 +153,7 @@ class Game(object):
             print("AI가 수를 두는 중...")
 
         for i in range(height-1, -1, -1):
-            print(hex(i+1)[-1], end=' ')
+            print(f'{i+1:02d}', end=' ')
             for j in range(width):
                 loc = (i) * width + j
                 p = board.states.get(loc, -1)
@@ -161,12 +161,12 @@ class Game(object):
                     print('● ' if board.order == 0 else '○ ', end='')
                 elif p == player2:
                     print('○ ' if board.order == 0 else '● ', end='')
-                elif board.is_you_black() and (j, i) in board.unable_locations:
+                elif board.is_you_black() and (j, 14-i) in board.unable_locations:
                     print('Ⅹ ', end='')
                 else:
                     print('+ ', end='')
             print()
-        print('  ', end='')
+        print('   ', end='')
         for i in range(height):
             print(chr(ord('a') + i), end=' ')
         print()

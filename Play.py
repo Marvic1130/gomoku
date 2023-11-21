@@ -30,7 +30,7 @@ class Human(object):
         if move == -1 or move in board.states.keys():
             print("다시 입력하세요.")
             move = self.get_action(board)
-        elif board.is_you_black() and (row, col) in board.unable_locations:
+        elif board.is_you_black() and (row, board.height-(col+1)) in board.unable_locations:
             print("금수 자리에 돌을 놓을 수 없습니다.")
             move = self.get_action(board)
 
