@@ -3,6 +3,9 @@ import torch.nn.functional as F
 import numpy as np
 import copy
 
+from Utils.parameters import C_PUCT, N_PLAYOUT, TEMPERATURE
+
+
 class TreeNode(object):
     """MCTS 트리의 노드.
     Q : 자신의 가치
@@ -57,8 +60,8 @@ class TreeNode(object):
         c_puct: 이 노드의 점수에 대한 값 Q와 사전 확률 P의 상대적인 영향을 조절하는 상수.
         """
         self._u = (c_puct * self._P *
-                   torch.sqrt(self._parent._n_visits) / (1 + self._n_visits))
-        return self._Q + self._u
+                   torch.sqrt(torch.tensor(self._parent._n_visits, dtype=torch.float32)) / (1 + self._n_visits))
+        return torch.tensor(self._Q, dtype=torch.float32) + self._u
 
     def is_leaf(self):
         """리프 노드인지 확인. (즉, 이 노드 아래에 노드가 없는지)"""
@@ -71,7 +74,7 @@ class TreeNode(object):
 class MCTS(object):
     """Monte Carlo Tree Search의 구현체."""
 
-    def __init__(self, policy_value_fn, c_puct=5, n_playout=10000):
+    def __init__(self, policy_value_fn, c_puct=C_PUCT, n_playout=N_PLAYOUT):
         """
         policy_value_fn: 현재 상태에 대한 액션과 확률, 현재 플레이어의 예상 게임 종료 점수(-1에서 1 사이)를 출력하는 함수.
         c_puct: 최대값 정책에 대한 탐색이 얼마나 빠르게 수렴되는지를 제어하는 상수. 높은 값은 사전 확률에 더 의존.
@@ -97,7 +100,7 @@ class MCTS(object):
         action_probs, leaf_value = self._policy(state)
         end, winner = state.game_end()
         if not end:
-            node.expand(action_probs, state.forbidden_moves, state.is_you_black())
+            node.expand(action_probs, state.unable_moves, state.is_you_black())
         else:
             # 종료 상태인 경우 "실제" 리프 평가 값을 반환.
             if winner == -1:  # 무승부
@@ -132,7 +135,7 @@ class MCTS(object):
 
 
 class MCTSPlayer(object):
-    def __init__(self, policy_value_function, c_puct=5, n_playout=2000, is_selfplay=0):
+    def __init__(self, policy_value_function, c_puct=C_PUCT, n_playout=N_PLAYOUT, is_selfplay=0):
         self.mcts = MCTS(policy_value_function, c_puct, n_playout)
         self._is_selfplay = is_selfplay
 
@@ -142,15 +145,17 @@ class MCTSPlayer(object):
     def reset_player(self):
         self.mcts.update_with_move(-1)
 
-    def get_action(self, board, temp=1e-3, return_prob=0):
+    def get_action(self, board, temp=TEMPERATURE, return_prob=0):
         move_probs = torch.zeros(board.width * board.height)
         if board.width * board.height - len(board.states) > 0:
             acts, probs = self.mcts.get_move_probs(board, temp)
             move_probs[list(acts)] = torch.tensor(probs)
             if self._is_selfplay:
                 # (자가 학습을 할 때는) 디리클레 노이즈를 추가하여 탐색.
+                normalized_probs = 0.75 * probs + 0.25 * np.random.dirichlet(0.3 * np.ones(len(probs)))
+                normalized_probs /= normalized_probs.sum()
                 move = torch.tensor(np.random.choice(
-                    acts, p=0.75 * probs + 0.25 * np.random.dirichlet(0.3 * np.ones(len(probs)))
+                    acts, p=normalized_probs
                 ))
                 self.mcts.update_with_move(move.item())
             else:

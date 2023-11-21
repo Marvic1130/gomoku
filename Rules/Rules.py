@@ -1,13 +1,14 @@
 from Utils.parameters import EMPTY
 
-class Renju_Rule(object):
+class Rules:
     def __init__(self, board, board_size):
         self.board = board
         self.board_size = board_size
 
     def is_invalid(self, x, y):
         # 주어진 좌표가 바둑판의 범위를 벗어나는지 검사.
-        return (x < 0 or x >= self.board_size or y < 0 or y >= self.board_size)
+        return (x < 0 or x >= self.board_size or
+                y < 0 or y >= self.board_size)
 
     def set_stone(self, x, y, stone):
         # 주어진 좌표에 돌을 놓는다.
@@ -16,9 +17,9 @@ class Renju_Rule(object):
     def get_xy(self, direction):
         # 주어진 방향에 따른 x, y 이동 벡터를 반환.
         # 0: 좌, 1: 우, 2: 좌상, 3: 우하, 4: 상, 5: 하, 6: 우상, 7: 좌
-        list_dx = [-1, 1, -1, 1, 0, 0, 1, -1]
-        list_dy = [0, 0, -1, 1, -1, 1, -1, 1]
-        return list_dx[direction], list_dy[direction]
+        ls_x = [-1, 1, -1, 1, 0, 0, 1, -1]
+        ls_y = [0, 0, -1, 1, -1, 1, -1, 1]
+        return ls_x[direction], ls_y[direction]
 
     def get_stone_count(self, x, y, stone, direction):
         # 주어진 위치에서 주어진 방향으로 연속된 돌의 개수를 반환.
@@ -30,7 +31,7 @@ class Renju_Rule(object):
             while True:
                 x, y = x + dx, y + dy
                 if self.is_invalid(x, y) or self.board[y][x] != stone:
-                    break;
+                    break
                 else:
                     cnt += 1
         return cnt
@@ -38,24 +39,24 @@ class Renju_Rule(object):
     def is_gameover(self, x, y, stone):
         # 주어진 위치에서 승리 조건을 만족하는지 확인.
         for i in range(4):
-            cnt = self.get_stone_count(x, y, stone, i)
-            if cnt >= 5:
+            count = self.get_stone_count(x, y, stone, i)
+            if count >= 5:
                 return True
         return False
 
     def is_six(self, x, y, stone):
         # 주어진 위치에서 6개의 돌이 연속된 패턴을 검사.
         for i in range(4):
-            cnt = self.get_stone_count(x, y, stone, i)
-            if cnt > 5:
+            count = self.get_stone_count(x, y, stone, i)
+            if count > 5:
                 return True
         return False
 
     def is_five(self, x, y, stone):
         # 주어진 위치에서 5개의 돌이 연속된 패턴을 검사.
         for i in range(4):
-            cnt = self.get_stone_count(x, y, stone, i)
-            if cnt == 5:
+            count = self.get_stone_count(x, y, stone, i)
+            if count == 5:
                 return True
         return False
 
@@ -79,7 +80,7 @@ class Renju_Rule(object):
                 dx, dy = coord
                 self.set_stone(dx, dy, stone)
                 if 1 == self.open_four(dx, dy, stone, direction):
-                    if not self.forbidden_point(dx, dy, stone):
+                    if not self.unable_point(dx, dy, stone):
                         self.set_stone(dx, dy, EMPTY)
                         return True
                 self.set_stone(dx, dy, EMPTY)
@@ -88,13 +89,12 @@ class Renju_Rule(object):
     def open_four(self, x, y, stone, direction):
         # 주어진 위치와 방향에서 4개의 돌이 연속된 패턴을 만들 수 있는지 확인.
         if self.is_five(x, y, stone):
-            return False
+            return 0
         cnt = 0
         for i in range(2):
             coord = self.find_empty_point(x, y, stone, direction * 2 + i)
-            if coord:
-                if self.five(coord[0], coord[1], stone, direction):
-                    cnt += 1
+            if coord and self.five(coord[0], coord[1], stone, direction):
+                cnt += 1
         if cnt == 2:
             if 4 == self.get_stone_count(x, y, stone, direction):
                 cnt = 1
@@ -124,6 +124,8 @@ class Renju_Rule(object):
         for i in range(4):
             if self.open_three(x, y, stone, i):
                 cnt += 1
+                if cnt >= 2:
+                    break
         self.set_stone(x, y, EMPTY)
         if cnt >= 2:
             return True
@@ -136,14 +138,18 @@ class Renju_Rule(object):
         for i in range(4):
             if self.open_four(x, y, stone, i) == 2:
                 cnt += 2
+                if cnt >= 2:
+                    break
             elif self.four(x, y, stone, i):
                 cnt += 1
+                if cnt >= 2:
+                    break
         self.set_stone(x, y, EMPTY)
         if cnt >= 2:
             return True
         return False
 
-    def forbidden_point(self, x, y, stone):
+    def unable_point(self, x, y, stone):
         # 주어진 위치가 금수(불가능한 수)인지 확인.
         if self.is_five(x, y, stone):
             return False
@@ -153,11 +159,11 @@ class Renju_Rule(object):
             return True
         return False
 
-    def get_forbidden_points(self, stone):
+    def get_unable_points(self, stone):
         # 주어진 돌의 입장에서 금수인 좌표들을 반환.
         coords = []
         for y in range(len(self.board)):
-             for x in range(len(self.board[0])):
-                if self.board[y][x]: continue
-                if self.forbidden_point(x, y, stone): coords.append((x, y))
-        return [(y, x) for x, y in coords]
+            for x in range(len(self.board[0])):
+                if self.board[y][x] == EMPTY and self.unable_point(x, y, stone):
+                    coords.append((x, y))
+        return coords
