@@ -28,7 +28,7 @@ const Community = () => {
             <PostContent>{post.content}</PostContent>
           </PostItem>
         ))}
-        {/* 페이지네이션 컴포넌트 추가 */}
+        {/*  */}
         <Pagination>
           {Array.from({ length: Math.ceil(posts.length / pageSize) }, (_, index) => (
             <PageNumber key={index + 1} onClick={() => handlePageChange(index + 1)}>
@@ -97,7 +97,6 @@ const CreateBoardButton = styled(Link)`
   border-radius: 10px;
   text-decoration: none;
 `;
-
 const Pagination = styled.div`
   display: flex;
   justify-content: center;
