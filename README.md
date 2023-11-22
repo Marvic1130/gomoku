@@ -10,8 +10,8 @@
 |:------:|:---:|:---:|
 |강예성|AI인공지능|TensorFlow, Python|
 |박희준|클라이언트|Unity, C#|
-|김지현|프론트|React, JavaScript|
-|김경민|백앤드|Flask, Python|
+|김지현|풀스텍|React, SpringBoot, JS, Java|
+|이명재|백앤드|SpringBoot, Java|
 
 ## 게임 규칙
 
