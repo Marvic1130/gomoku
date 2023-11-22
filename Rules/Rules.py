@@ -1,5 +1,6 @@
 from Utils.parameters import EMPTY
 
+
 class Rules:
     def __init__(self, board, board_size):
         self.board = board
