@@ -2,7 +2,7 @@ import torch
 import pickle
 from Rules.Board import Board, Game
 from Train.MCTS import MCTSPlayer
-from Train.PolicyValueNet import PolicyValueNet
+from Train.PolicyValueNet import PolicyValueNet, PolicyResNet
 from Utils.parameters import C_PUCT, N_PLAYOUT
 
 
@@ -48,8 +48,8 @@ def run():
     print("현재 가능한 난이도(정책망의 학습 횟수) 목록 : [ 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000 ]")
     print("난이도를 입력하세요.")
     hard = int(input())
-    path = 'save/model_15/policy_15_250.model'
-    model_file = f'./save/model_{size}/policy_{size}_{hard}.model'    # colab
+    path = './save/alpha_0.2v'
+    model_file = f'{path}/model_{size}/policy_{size}_{hard}.model'    # colab
 
     print("자신이 선공(흑)인 경우에 0, 후공(백)인 경우에 1을 입력하세요.")
     order = int(input())
@@ -60,7 +60,8 @@ def run():
     game = Game(board)
 
     # 이미 제공된 model을 불러와서 학습된 policy_value_net을 얻는다.
-    policy_value_net = PolicyValueNet(board_width=width, board_height=height)
+    # policy_value_net = PolicyValueNet(board_width=width, board_height=height)
+    policy_value_net = PolicyResNet(board_width=width, board_height=height)
     policy_value_net.load_model(model_file)
 
     mcts_player = MCTSPlayer(policy_value_net.policy_value_fn, c_puct=C_PUCT, n_playout=N_PLAYOUT)
