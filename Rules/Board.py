@@ -3,7 +3,7 @@ import numpy as np
 from Rules.Rules import Rules
 from IPython.display import clear_output
 import os
-
+import random
 from Utils.parameters import TEMPERATURE
 
 
@@ -70,7 +70,7 @@ class Board(object):
         if len(moved) < self.n_in_row * 2 - 1: return False, -1
 
         for m in moved:
-            h = m // width
+            h = m // height
             w = m % width
             player = states[m]
 
@@ -129,6 +129,7 @@ class Board(object):
 class Game(object):
     def __init__(self, board, **kwargs):
         self.board = board
+        self.turn = []
 
     def graphic(self, board, player1, player2):
         width = board.width
@@ -189,9 +190,26 @@ class Game(object):
 
             if current_player == 1:  # 사람일 때
                 move = player_in_turn.get_action(self.board)
+                self.turn.append(move)
             else:  # AI일 때
-                move = player_in_turn.get_action(self.board)
-
+                if len(self.turn) == 0:
+                    move = 112
+                elif len(self.turn) == 1:
+                    position = [-16, -15, -14, -1, 1, 14, 15, 16]
+                    move = self.turn[0] + random.choice(position)
+                elif len(self.turn) == 2:
+                    while True:
+                        position = [-31, -30, -29,
+                                    -17, -16, -15, -14, -13,
+                                    -2, -1, 1, 2,
+                                    13, 14, 15, 16, 17,
+                                    29, 30, 31]
+                        move = self.turn[0] + random.choice(position)
+                        if move not in self.turn:
+                            break
+                else:
+                    move = player_in_turn.get_action(self.board)
+                self.turn.append(move)
             self.board.do_move(move)
             end, winner = self.board.game_end()
             if end:
