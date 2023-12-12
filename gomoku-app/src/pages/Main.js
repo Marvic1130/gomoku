@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Banner from '../components/Banner';
 import PostList from '../components/PostList';
 import UserSection from '../components/UserSection';
 import RankingSection from '../components/RankingSection';
-
+import axios from 'axios';
 import styled from 'styled-components';
 
 const Main = () => {
+  // const [responseData, setResponseData] = useState(null);
+
+  // useEffect(() => {
+  //   axios.get('/main')
+  //     .then(response => {
+  //       setResponseData(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
   return (
     <PageContainer>
-      <Banner />
+      <Banner/>
       <ContentContainer>
         <MainContainer>
           <LeftContainer>

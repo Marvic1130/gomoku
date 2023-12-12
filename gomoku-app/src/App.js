@@ -10,11 +10,19 @@ import Ranking from './pages/Ranking';
 import Community from './pages/Community';
 import CreateBoard from './pages/CreateBoard';
 import BoardDetail from './pages/BoardDetail';
-
+import axios from 'axios';
 import styled from 'styled-components';
 
 
-
+axios.get('/post')
+.then(response => {
+  // 백엔드 응답 처리
+  <h1>asfdasdf
+  </h1>
+})
+.catch(error => {
+  // 에러 처리
+});
 const App = () => {
   return (
     <Router>
