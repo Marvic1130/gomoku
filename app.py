@@ -73,9 +73,11 @@ class Server:
 
 def start_server():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(('localhost', 0))
+    s.bind(('0.0.0.0', 0))
     s.listen(1)
-    host, port = s.getsockname()
+    host = '192.168.0.14'
+    _, port = s.getsockname()
+    print(s.getsockname())
     print(f"Socket server started on {host} port {port}")
 
     servers[(host, port)] = {"server": s, "active": True, "thread": threading.current_thread()}
@@ -148,6 +150,25 @@ def start():
         return jsonify({"message": "Server is starting", "host": host, "port": port}), 200
 
     return jsonify({"error": "Failed to start the server"}), 500
+
+
+@app.route('/list')
+def list_servers():
+    with lock:
+        active_servers = [{"host": host, "port": port} for (host, port), server in servers.items() if server["active"]]
+    return jsonify(active_servers), 200
+
+
+@app.route('/stop', methods=['POST'])
+def stop():
+    data = request.json
+    host, port = data['host'], int(data['port'])
+    with lock:
+        if (host, port) in servers and servers[(host, port)]["active"]:
+            servers[(host, port)]["active"] = False
+            return jsonify({"message": "Server stopping"}), 200
+        else:
+            return jsonify({"error": "Server not found"}), 404
 
 
 if __name__ == "__main__":
