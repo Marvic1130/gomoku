@@ -5,6 +5,7 @@ using UnityEngine;
 // 물림수 관련 클래스
 public class StoneBacksies : MonoBehaviour
 {
+    StoneManager m_stoneManager;
     CurrentBoardStateInit m_currentBoardStateInit;
 
     // Util폴더에 있는 Dequeue Script, 사용자 생성 클래스
@@ -16,30 +17,35 @@ public class StoneBacksies : MonoBehaviour
     //물림수를 저장하는 함수;
     public void SetBacksies(GameObject obj, int row, int col)
     {
-        m_row.PushBack(row);
-        m_col.PushBack(col);
-        m_Stoneobj.PushBack(obj);
+            m_row.PushBack(row);
+            m_col.PushBack(col);
+            m_Stoneobj.PushBack(obj);
     }
 
     //Backsies 버튼을 누르면 실행되는 함수
     public void BacksiesButtonDown()
     {
-        //생성된 바둑돌이 없거나 흑돌 한 개만 있을 때 Backsies 제한
-        if (m_Stoneobj.Count != 0 && m_Stoneobj.Count != 1)
+        if (!m_stoneManager.m_IsWin)
         {
-            int row = m_row.PopBack();
-            int col = m_col.PopBack();
+            //생성된 바둑돌이 없거나 흑돌 한 개만 있을 때 Backsies 제한
+            if (m_Stoneobj.Count != 0 && m_Stoneobj.Count != 1)
+            {
+                int row = m_row.PopBack();
+                int col = m_col.PopBack();
 
-            m_currentBoardStateInit.m_CurrentBoardState[row, col] = -1;
+                m_currentBoardStateInit.m_CurrentBoardState[row, col] = -1;
 
-            Destroy(m_Stoneobj.PopBack());
+                Destroy(m_Stoneobj.PopBack());
 
-            //Debug.Log("수를 물렸습니다.");
+                Debug.Log("수를 물렸습니다.");
+            }
+            else
+            {
+                Debug.Log("수를 물릴 수 없습니다.");
+            }
         }
         else
-        {
-            //Debug.Log("수를 물릴 수 없습니다.");
-        }
+            Debug.Log("승리상태에서는 수를 물릴 수 없습니다.");
     }
 
     //Restart 버튼을 누르면 실행되는 함수
@@ -53,6 +59,7 @@ public class StoneBacksies : MonoBehaviour
 
     void Start()
     {
+        m_stoneManager = FindAnyObjectByType<StoneManager>();
         m_currentBoardStateInit = FindAnyObjectByType<CurrentBoardStateInit>();
     }
 }

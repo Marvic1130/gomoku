@@ -10,7 +10,7 @@ public class BoardManager : MonoBehaviour
 
     //Go Board 한 변의 교차점 개수 & 교차점 사이의 거리
     const int m_boardSize = 15;
-    const float m_sideLeng = 0.3925f;
+    const float m_sideLeng = 0.86f;
 
     //Go Board의 기준점 (좌하단, (0,0) )
     const float m_cXPos = 0f;

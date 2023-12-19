@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: inGame_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: bd8b87c75ea753342a3707bae70c0b9e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 385024315392
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1484724686848
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1574738644992
+    m_Localized: Backsies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1667390820352
+    m_Localized: Show Board
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1791676436480
+    m_Localized: Hide Board
+    m_Metadata:
+      m_Items: []
+  - m_Id: 249410554220544
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 254002721509376
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -187,7 +187,6 @@ public class RuleManager : MonoBehaviour
                         isOneBlackStone = 1;
                     if(emptyCount <= 1 && line.Contains("X"))
                     {
-                        //Debug.Log("Cut");
                         break;
                     }
                     if (line == "OOO" || lineCopy == "OOO")
@@ -198,7 +197,6 @@ public class RuleManager : MonoBehaviour
                                 checkUntilThree = true;
                             else
                             {
-                                //Debug.Log("OOO");
                                 int RuleCheck = IsCheckMoreOverThree(player, d, rememberPos, stonePos);
                                 if (RuleCheck == 1)
                                     return 1;

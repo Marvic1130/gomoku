@@ -14,9 +14,11 @@ public class CurrentBoardStateInit : MonoBehaviour
     float m_sideLeng;
 
     //보드의 현재상태를 저장하는 배열변수 & 교차점들에 부여한 행열 번호를 저장할 변수
-    public int[,] m_CurrentBoardState { get; set; }
 
     int m_row, m_col;
+    string m_matrixData;
+    public int[,] m_CurrentBoardState { get; set; }
+    public string m_MatrixData { get { return m_matrixData; } }
 
     public int m_Row { get { return m_row; } }
     public int m_Col { get { return m_col; } }
@@ -49,10 +51,21 @@ public class CurrentBoardStateInit : MonoBehaviour
     public void UpdateBoardState(GameObject obj, RaycastHit hit, bool player)
     {
         GetMatrixNum(hit.point);
-        m_CurrentBoardState[m_row, m_col] = player ? 1 : 0;
+        m_CurrentBoardState[m_row, m_col] = player? 1 : 0;
 
         //물림수를 저장
         m_stoneBacksies.SetBacksies(obj, m_row, m_col);
+
+        CurrentMatrixDataToString();
+
+        //GetCurrenBoardStateArr();
+    }
+    public void UpdateBoardStateAI(GameObject obj, bool player, int m_AIrow, int m_AIcol)
+    {
+        m_CurrentBoardState[m_AIrow - 1, m_AIcol - 1] = 0;
+
+        //물림수를 저장
+        m_stoneBacksies.SetBacksies(obj, m_AIrow, m_AIcol);
 
         //GetCurrenBoardStateArr();
     }
@@ -62,6 +75,18 @@ public class CurrentBoardStateInit : MonoBehaviour
     {
         m_row = Mathf.RoundToInt(StoneWorldPoint.x / m_sideLeng);
         m_col = Mathf.RoundToInt(StoneWorldPoint.y / m_sideLeng);
+    }
+
+    // 현재 위치를 (a,8), (i,6) 이런 형태로 변환하는 함수. AI 서버와 통신하기 위함
+    void CurrentMatrixDataToString()
+    {
+        for(int i = 0;i < m_boardSize;i++)
+        {
+            if(i == m_row)
+            {
+                m_matrixData = (char)(97 + i) + "," + (m_col + 1);
+            }
+        }
     }
 
     // 바둑판의 현재 상태를 Console창에 띄우는 Debug 함수
