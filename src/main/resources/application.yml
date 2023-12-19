@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: ENC(1r9cKJcGGkvCf/NwUckVCKUDDdF5OA/JglUor7GFJ70BC+b7lcjpFqnQc4UDFycKpmVhA1VS9aDMQkeT8ebeB1ktgWCvy8IVP0fW4gDcdT5QeI/pS4q1AkRibmEsQ1fXobiwmpm7JvxJdpsgsVajew==)
+    username: ENC(ETqynjLcuXBGek/c0iP3CdHVNYmpercmh6h/VqbZjv59Stg+qmekHseaE6udKLMo)
+    password: ENC(a9opc9+P0+FHpkPf5hL565y/dCguAgJgJ6kopgMDL4LGomf/fhwJKwLVLZsJtKJs)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secretKey:
+    ENC(s6g3DhD7xbSrIBohZ/m+gZ7wSxq8C1lXXISYf+tpxLKUCz17V2XAH1O8997/gs1YubtKx/1b71HjYRQ0XXQRJojEZG0YmgK9ZFGhLSWFOvMqAqFSJ1IAQUp2s1goAmuk)
+  accessExpiration: 1800000 #30분 1800000
+  refreshExpiration: 604800000 #1주 604800000
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
