@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import socket
+import sys
+
 import numpy as np
 from Rules.Rules import Rules
 from IPython.display import clear_output
@@ -131,7 +134,7 @@ class Game(object):
         self.board = board
         self.turn = []
 
-    def graphic(self, board, player1, player2):
+    def graphic(self, board, player1, player2, server_mode=False, s: socket.socket=None):
         width = board.width
         height = board.height
 
@@ -173,8 +176,10 @@ class Game(object):
         print()
         if board.last_loc != -1:
             print(f"마지막 돌의 위치 : ({chr(ord('a') + board.last_loc[1])},{15-board.last_loc[0]})")
+        if server_mode and s is not None:
+            s.sendall(f"{chr(ord('a') + board.last_loc[1])},{15-board.last_loc[0]}")
 
-    def start_play(self, player1, player2, start_player=0, is_shown=1):
+    def start_play(self, player1, player2, start_player=0, is_shown=1, server_mode=False, client_socket=None):
         self.board.init_board(start_player)
         p1, p2 = self.board.players
         player1.set_player_ind(p1)
@@ -214,12 +219,16 @@ class Game(object):
             end, winner = self.board.game_end()
             if end:
                 if is_shown:
-                    self.graphic(self.board, player1.player, player2.player)
+                    self.graphic(self.board, player1.player, player2.player, server_mode=server_mode, s=client_socket)
                     if winner != -1:
                         print("Game end. Winner is", players[winner])
                     else:
                         print("Game end. Tie")
-                return winner
+                return winner, sys.exit()
+            if current_player != 1 and server_mode and client_socket is not None:
+                send_data = f"{chr(ord('a') + self.board.last_loc[1])},{15 - self.board.last_loc[0]}"
+                print(send_data)
+                client_socket.sendall(send_data.encode())
 
     def start_self_play(self, player, is_shown=0, temp=TEMPERATURE):
         """ 스스로 자가 대국하여 학습 데이터(state, mcts_probs, z) 생성 """
